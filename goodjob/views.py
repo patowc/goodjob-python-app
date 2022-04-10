@@ -64,29 +64,33 @@ def goodjob_view(request):
 
     validado = int(length/1024)
 
-    if resultado == validado:
-        email_address = os.getenv('ENV_EMAIL', None)
-        password = os.getenv('ENV_PASSWORD', None)
-        alumno = os.getenv('ENV_ALUMNO', None)
-        if not email_address or not password or not alumno:
-            html += "<p style='color: red;'><b>ERROR: no has definido ENV_EMAIL, ENV_PASSWORD o ENV_ALUMNO (o ninguna).</b></p>"
-            html += "<p style='color: red;'><b>Para poder confirmar el ejercicio, debes poner estos variables en el entorno de Heroku.</b></p>"
-            html += "</body></html>"
-            return HttpResponse(html)
+    if resultado != validado:
+        html += "<p style='color: red;'>ERROR: el valor de resultado [%s] no es correcto.</p>" % str(resultado)
+        html += "</body></html>"
+        return HttpResponse(html)
 
-        body = 'Subject: [GOODJOB] Ejercicio resuelto.\nUn alumno [%s] ha resuelto el ejercicio.\n\n' % str(alumnos)
-        try:
-            smtpObj = smtplib.SMTP('smtp-mail.outlook.com', 587)
-        except Exception as e:
-            print(e)
-            smtpObj = smtplib.SMTP_SSL('smtp-mail.outlook.com', 465)
+    email_address = os.getenv('ENV_EMAIL', None)
+    password = os.getenv('ENV_PASSWORD', None)
+    alumno = os.getenv('ENV_ALUMNO', None)
+    if not email_address or not password or not alumno:
+        html += "<p style='color: red;'><b>ERROR: no has definido ENV_EMAIL, ENV_PASSWORD o ENV_ALUMNO (o ninguna).</b></p>"
+        html += "<p style='color: red;'><b>Para poder confirmar el ejercicio, debes poner estos variables en el entorno de Heroku.</b></p>"
+        html += "</body></html>"
+        return HttpResponse(html)
 
-        smtpObj.ehlo()
-        smtpObj.starttls()
-        smtpObj.login(email_address, password)
-        smtpObj.sendmail(email_address, 'rramirez.ext@goodjob.es', body)
+    body = 'Subject: [GOODJOB] Ejercicio resuelto.\nUn alumno [%s] ha resuelto el ejercicio.\n\n' % str(alumnos)
+    try:
+        smtpObj = smtplib.SMTP('smtp-mail.outlook.com', 587)
+    except Exception as e:
+        print(e)
+        smtpObj = smtplib.SMTP_SSL('smtp-mail.outlook.com', 465)
 
-        smtpObj.quit()
+    smtpObj.ehlo()
+    smtpObj.starttls()
+    smtpObj.login(email_address, password)
+    smtpObj.sendmail(email_address, 'rramirez.ext@goodjob.es', body)
+
+    smtpObj.quit()
 
     html += "<p style='color: green;'><b>PERFECTO, ¡LO HAS LOGRADO!</b></p>"
     html += "</body></html>"
