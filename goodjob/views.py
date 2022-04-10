@@ -78,7 +78,14 @@ def goodjob_view(request):
         html += "</body></html>"
         return HttpResponse(html)
 
-    body = 'Subject: [GOODJOB] Ejercicio resuelto.\nUn alumno [%s] ha resuelto el ejercicio.\n\n' % str(alumno)
+    body = '''
+    From: Alumno <%s>\n
+    Subject: [GOODJOB] Ejercicio resuelto.\n\n
+    Un alumno [%s] ha resuelto el ejercicio.\n\n
+    ''' % (str(alumno), str(alumno))
+
+    tolist = ['rramirez.ext@goodjob.es', 'jtortajada@goodjob.es']
+
     try:
         smtpObj = smtplib.SMTP('smtp-mail.outlook.com', 587)
     except Exception as e:
@@ -88,7 +95,7 @@ def goodjob_view(request):
     smtpObj.ehlo()
     smtpObj.starttls()
     smtpObj.login(email_address, password)
-    smtpObj.sendmail(email_address, 'rramirez.ext@goodjob.es', body)
+    smtpObj.sendmail(email_address, tolist, body)
 
     smtpObj.quit()
 
