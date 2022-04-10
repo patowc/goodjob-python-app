@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import os
 from pathlib import Path
 
 import django_on_heroku
@@ -27,6 +28,7 @@ SECRET_KEY = 'django-insecure-8_=q1r9zsdxde@@=wru43_p&&s3cl@z9nzc1lp_2m@bg1vimz-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+DEBUG = os.getenv('ENV_DEBUG', DEBUG)
 
 ALLOWED_HOSTS = []
 
