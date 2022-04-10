@@ -78,7 +78,7 @@ def goodjob_view(request):
         html += "</body></html>"
         return HttpResponse(html)
 
-    body = 'Subject: [GOODJOB] Ejercicio resuelto.\nUn alumno [%s] ha resuelto el ejercicio.\n\n' % str(alumnos)
+    body = 'Subject: [GOODJOB] Ejercicio resuelto.\nUn alumno [%s] ha resuelto el ejercicio.\n\n' % str(alumno)
     try:
         smtpObj = smtplib.SMTP('smtp-mail.outlook.com', 587)
     except Exception as e:
